@@ -1,6 +1,5 @@
 package lv.luhmirins.ideas.list
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -8,7 +7,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_list.*
 import lv.luhmirins.ideas.R
-import lv.luhmirins.ideas.form.IdeaFormActivity
 
 class IdeaListActivity : AppCompatActivity() {
 
@@ -40,9 +38,13 @@ class IdeaListActivity : AppCompatActivity() {
         }
     }
 
+    /*
+    TODO open form activity
+     1) create an `Intent` for `GiftFormActivity`
+     2) put id of clicked item into extras (if it not null)
+     3) call `startActivity`
+      [Cheat 1]
+    */
     private fun openFormActivity(ideaId: Long?) {
-        val intent = Intent(this, IdeaFormActivity::class.java)
-        ideaId?.let { intent.putExtra("idea_id", it) }
-        startActivity(intent)
     }
 }

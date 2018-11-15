@@ -1,12 +1,10 @@
 package lv.luhmirins.ideas.form
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.activity_form.*
-import lv.luhmirins.ideas.*
+import lv.luhmirins.ideas.Idea
+import lv.luhmirins.ideas.R
 
 class IdeaFormActivity : AppCompatActivity() {
 
@@ -17,58 +15,56 @@ class IdeaFormActivity : AppCompatActivity() {
         setContentView(R.layout.activity_form)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val currentNoteId = intent?.getLongExtra("idea_id", 0) ?: 0
-        MyApp.IDEAS.getIdea(currentNoteId).observe(this, Observer { nullableIdea ->
-            currentIdea = nullableIdea
-
-            nullableIdea?.let { notNullIdea ->
-                input_place.setText(notNullIdea.place)
-                input_title.setText(notNullIdea.title)
-                input_details.setText(notNullIdea.notes)
-            }
-        })
-
-        fab_save.setOnClickListener {
-            currentIdea
-                ?.let { idea -> updateIdea(idea) }
-                ?: saveIdea()
-            finish()
-        }
+        /*
+           TODO connect your layout with some actions:
+            1) retrieve id of current idea from `intent`
+            2) fetch idae from `MyApp.IDEAS` by observing changes
+            3) cache data in `currentIdea` for future use
+            4) if data is not empty(null) write existing values to inputs
+            5) add 'save' button click listener to either update or save
+                  gift to database and finish activity
+            [Cheat 3]
+           */
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_form, menu)
-        return true
+    /*
+     TODO write a function that:
+      1) takes text from inputs
+      2) creates new Idea object
+      3) executes `SaveAsync` to save new idea to database
+      [Cheat 4]
+    */
+    private fun saveIdea() {
     }
 
+    /*
+    TODO write a function that:
+     1) takes text from inputs
+     2) creates new Idea object with same uid
+     3) executes `UpdateAsync` to save idea changes to database
+     [Cheat 5]
+   */
+    private fun updateIdea(idea: Idea) {
+    }
+
+    /*
+     TODO implement delete button
+      1) override `onPrepareOptionsMenu(Menu)` method of `AppCompatActivity`
+      2) using `menuInflates` inflate `R.menu.menu_form`
+      3) don`t forget to add `return true` so that menu is displayed
+      [Cheat 6]
+    */
+
+    /*
+     TODO implement delete button click handling
+      1) if `currentIdea` is not null execute `DeleteAsync`
+      2) finish current activity
+      3) don't forget to `return true` to show that we handled the click
+      [Cheat 6]
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_item_delete) {
-            currentIdea?.let { idea ->
-                DeleteAsync().execute(idea)
-            }
-            finish()
-            return true
         }
         return super.onOptionsItemSelected(item)
     }
-
-    private fun updateIdea(idea: Idea) {
-        val newIdea = Idea(
-            uid = idea.uid,
-            place = input_place.text.toString(),
-            title = input_title.text.toString(),
-            notes = input_details.text.toString()
-        )
-        UpdateAsync().execute(newIdea)
-    }
-
-    private fun saveIdea() {
-        val newIdea = Idea(
-            place = input_place.text.toString(),
-            title = input_title.text.toString(),
-            notes = input_details.text.toString()
-        )
-        SaveAsync().execute(newIdea)
-    }
-
 }
